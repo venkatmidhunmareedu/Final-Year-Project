@@ -2,63 +2,34 @@
 import { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import Loader from './_components/Loader';
+import { useRouter } from 'next/navigation';
 
 const App = () => {
-    const [web3, setWeb3] = useState(null);
-    const [accounts, setAccounts] = useState([]);
-    const [userAddress, setUserAddress] = useState('');
+    const [userAddress, setUserAddress] = useState();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [seconds, setSeconds] = useState(5);
+    const [balance, setBalance] = useState();
+    const { push } = useRouter();
 
 
     useEffect(() => {
-        // Check if MetaMask is installed
-        if (typeof window.ethereum !== 'undefined') {
-            const initWeb3 = async () => {
-                try {
-                    // Initialize web3
-                    const web3Instance = new Web3(window.ethereum);
-                    setWeb3(web3Instance);
 
-                    // Request account access if needed
-                    await window.ethereum.enable();
-
-                    // Get user's Ethereum address
-                    const accounts = await web3Instance.eth.getAccounts();
-                    setAccounts(accounts);
-
-                    if (accounts.length > 0) {
-                        setUserAddress(accounts[0]);
-                        // Assuming user is logged in if there's at least one account connected
-                        setIsLoggedIn(true);
-                    }
-                } catch (error) {
-                    // Handle error
-                    console.error('Error:', error);
-                }
-            };
-
-            initWeb3();
-        } else {
-            // MetaMask is not installed, prompt users to install it
-            alert('Please install MetaMask to use this application.');
+        const web3 = new Web3(window.ethereum);
+        async function loadAccounts() {
+            const accounts = await web3.eth.getAccounts();
+            const account = accounts[0];
+            setUserAddress(account);
+            setIsLoggedIn(true);
+            const balance = await web3.eth.getBalance(account);
+            console.log(balance);
+            setBalance(balance);
+            push("/patient/dashboard");
         }
+        loadAccounts();
     }, []);
 
-    // const handleLogout = () => {
-    //     // Prompt the user to disconnect from MetaMask
-    //     if (window.ethereum && window.ethereum.isMetaMask) {
-    //         window.ethereum
-    //             .request({ method: 'eth_requestAccounts' })
-    //             .then(() => {
-    //                 setIsLoggedIn(false);
-    //                 setUserAddress('');
-    //             })
-    //             .catch((error) => {
-    //                 console.error('Error disconnecting from MetaMask:', error);
-    //             });
-    //     }
-    // };
+
 
 
     return (
@@ -80,6 +51,7 @@ const App = () => {
                         <div className='flex flex-col justify-center items-center gap-5'>
                             <div>
                                 <p>Logged in as: {userAddress}</p>
+                                <p>Balance : {parseInt(balance)}</p>
                                 <p className='text-center'><b>Patient</b></p>
                             </div>
                             <button className='bg-blue-700  text-white font-bold py-2 px-4 rounded w-fit ' disabled>Redirecting you to
@@ -88,7 +60,7 @@ const App = () => {
                                 }
                                 in
                                 {
-                                    " 5 seconds..."
+                                    " " + seconds + " seconds..."
                                 }
                             </button>
                         </div>
