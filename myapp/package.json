@@ -12,6 +12,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "ethers": "^6.11.1",
     "lucide-react": "^0.364.0",
     "next": "14.1.4",
     "react": "^18",
@@ -20,7 +21,8 @@
     "react-toastify": "^10.0.5",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
-    "web3": "^4.7.0"
+    "web3": "^4.7.0",
+    "web3modal": "^1.9.12"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
