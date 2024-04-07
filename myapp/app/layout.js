@@ -3,6 +3,8 @@ import "./globals.css";
 import Header from "./_components/Header";
 import MaxWidthWrapper from "./_components/MaxWidthWrapper";
 import Footer from "./_components/Footer";
+import { Toaster } from "@/components/ui/toaster";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +20,7 @@ export default function RootLayout({ children }) {
         <Header />
         <MaxWidthWrapper >
           {children}
+          <Toaster />
         </MaxWidthWrapper>
         <Footer />
       </body>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import MaxWidthWrapper from "./_components/MaxWidthWrapper";
+import { ToastProvider } from "@/components/ui/toast";
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
           </Link>
         </div>
       </MaxWidthWrapper>
+      
     </div>
   );
 }
