@@ -20,6 +20,9 @@ contract Medivault {
         return bytes(superAdmins[pubkey].name).length > 0;
     }
 
+    function editSuperAdmin(string memory name) public  {
+        superAdmins[msg.sender].name = name;
+    }
 
     function addSuperAdmin(address _address, string memory _name) public {
         superAdmins[_address] = SuperAdmin(_name);

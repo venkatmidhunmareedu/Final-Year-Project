@@ -1,6 +1,6 @@
 const MaxWidthWrapper = ( {children }) => {
   return (
-    <div className="md:max-w-5xl md:mx-auto" >
+    <div className="md:max-w-7xl md:mx-auto mx-2" >
         {children}
     </div>
   )

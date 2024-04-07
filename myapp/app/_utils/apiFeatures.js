@@ -26,13 +26,15 @@ export const setterFunction = async (provider) => {
 }
 
 
-export async function checkRole(contract,address) {
+export async function checkSuperAdminRole(contract,address) {
     if (!contract) {
         return null;
     } 
     const checksuperadmin = await contract.methods.checkSuperAdmin(address).call({ from: address });
     return checksuperadmin;
 }
+
+
 
 export async function fetchSuperadmin(contract, address) {
     if(!contract) {
@@ -49,6 +51,21 @@ export async function fetchSuperadmins(contract, address) {
     } // Ensure contract is not null
     const superadmins = await contract.methods.getAllSuperAdmins().call({ from: address });
     return superadmins;
+}
+
+export async function editSuperAdmin(contract , address , name ) {
+    if (!contract) {
+        return;
+    } // Ensure contract is not null
+    try {
+        const value = await contract.methods.editSuperAdmin(name).send({ from: address });
+        // console.log(value)
+        return true
+    }
+    catch(err) {
+        console.log(err);
+        return false;
+    }
 }
 
 // const fetchContract = (signerOrProvider) => {

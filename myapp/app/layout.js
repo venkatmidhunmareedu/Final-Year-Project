@@ -1,16 +1,12 @@
-import { Inter } from "next/font/google";
+
 import "./globals.css";
 import Header from "./_components/Header";
 import MaxWidthWrapper from "./_components/MaxWidthWrapper";
 import Footer from "./_components/Footer";
-import { Toaster } from "@/components/ui/toaster";
-
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Block chain based Health record management system",
-  description: "BHRMS",
+  title: "Medivault - Home",
+  description: "Medivault - A Dapp for Health Record Management",
 };
 
 export default function RootLayout({ children }) {
@@ -20,7 +16,6 @@ export default function RootLayout({ children }) {
         <Header />
         <MaxWidthWrapper >
           {children}
-          <Toaster />
         </MaxWidthWrapper>
         <Footer />
       </body>

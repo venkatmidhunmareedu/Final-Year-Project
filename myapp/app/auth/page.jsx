@@ -4,7 +4,7 @@ import Web3 from 'web3';
 import Loader from './_components/Loader';
 import { useRouter } from 'next/navigation';
 import Medivault from "../contracts/Medivault.json";
-import { connectWallet, setterFunction, checkRole } from '../_utils/apiFeatures';
+import { connectWallet, setterFunction, checkSuperAdminRole } from '../_utils/apiFeatures';
 import { useToast } from '@/components/ui/use-toast';
 
 const App = () => {
@@ -24,34 +24,6 @@ const App = () => {
 
 
     const provider = new Web3.providers.HttpProvider('HTTP://127.0.0.1:7545');
-    // async function redirector() {
-    //     const web3 = new Web3(provider);
-    //     // console.log(web3);
-    //     const networkId = await web3.eth.net.getId();
-    //     const deployedNetwork = Medivault.networks[networkId];
-    //     // console.log(deployedNetwork.address); 
-    //     const contract = new web3.eth.Contract(Medivault.abi, deployedNetwork && deployedNetwork.address);
-    //     // console.log(contract);
-    //     setState({ web3: web3, contract: contract });
-    //     // console.log(state);
-    // }
-    // provider && redirector();
-
-    // useEffect(() => {
-    //     const { contract } = state;
-    //     async function setsuperadmin() {
-    //         await contract.methods.setSuperadmin().send({ from: "0x6b6c00D24d568e1383663FAD9356B3E65df7e2af" })
-    //     }
-    //     async function getsuperadmin() {
-    //         const superadmin = await contract.methods.getSuperadmins().call({ from: "0x6b6c00D24d568e1383663FAD9356B3E65df7e2af" });
-    //         setData(superadmin);
-    //     }
-    //     contract && setsuperadmin();
-
-    //     contract && getsuperadmin();
-    //     console.log(data);
-    // }, [state])
-
     const startCountdown = () => {
         if (timerId) return; // Prevent multiple timers from being started
 
@@ -72,8 +44,8 @@ const App = () => {
 
             console.log(state);
 
-            // Once state is updated with contract, call checkRole
-            const checksuperadmin = await checkRole(contract, walletaddress);
+            // Once state is updated with contract, call checkSuperAdminRole
+            const checksuperadmin = await checkSuperAdminRole(contract, walletaddress);
             console.log("checksuperadmin", checksuperadmin);
             if (checksuperadmin) {
                 console.log("Updated role");
@@ -85,7 +57,7 @@ const App = () => {
                     description: `Identified as super admin. Redirecting you to your Dashboard!`,
                 })
                 setTimeout(() => {
-                    router.push("/admin/dashboard");
+                    router.push("/superadmin/dashboard");
                 },4000)
             }
             else {
@@ -104,7 +76,7 @@ const App = () => {
     // console.log("State", state);
     // console.log("address", address);
 
-    // async function checkRole(contract,address) {
+    // async function checkSuperAdminRole(contract,address) {
     //     if (!contract) {
     //         console.log("Null here");
     //         return;
