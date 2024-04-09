@@ -56,7 +56,7 @@ export function AccountDetails() {
             address: address,
             username: values.username
         });
-        if (check) {
+        if (check.toString()) {
             setIsDisabled({ "disabled": "disabled", check: true })
             // setUsername(values.username)
             setTimeout(() => {

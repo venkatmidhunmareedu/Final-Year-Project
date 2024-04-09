@@ -50,8 +50,19 @@ export async function fetchSuperadmins(contract, address) {
         return;
     } // Ensure contract is not null
     const superadmins = await contract.methods.getAllSuperAdmins().call({ from: address });
+    console.log(superadmins);
     return superadmins;
 }
+
+export const retriveName = async (contract,address) =>  {
+    const data = await fetchSuperadmin(contract,address);
+    return data.name;
+}
+
+export const retriveNames = async (contract,address) =>  {
+    const data = await contract.methods.fetchNames().call({ from: address });
+    return data;
+} 
 
 export async function editSuperAdmin(contract , address , name ) {
     if (!contract) {
@@ -67,6 +78,74 @@ export async function editSuperAdmin(contract , address , name ) {
         return false;
     }
 }
+
+export async function addSuperAdmin(contract , mm_address,address, name ) {
+    if (!contract) {
+        return;
+    } // Ensure contract is not null
+    try {
+        const value = await contract.methods.addSuperAdmin(mm_address , name).send({ from: address });
+        console.log(value)
+        return true
+    }
+    catch(err) {
+        console.log(err);
+        return false;
+    }
+}
+
+
+export async function addAdmin(contract , address, insitution_name,mm_address ) {
+    if (!contract) {
+        return;
+    }
+    try {
+        const value = await contract.methods.addAdmin(insitution_name,mm_address).send({ from: address });
+        console.log(value);
+        return true;
+    }
+    catch(err) {
+        console.log(err);
+        return false;
+    }
+}
+
+export async function retriveAdminAddresses(contract, address) {
+    if (!contract) {
+        return null;
+    }
+    const adminAddress = await contract.methods.fetchAdminsAddresses().call({ from: address });
+    console.log("api feature adminAddress",adminAddress);
+    return adminAddress;
+}
+
+export async function fetchAdmins(contract, address) {
+    if (!contract) {
+        return null;
+    }
+    const admins = await contract.methods.fetchAdmins().call({ from: address });
+    console.log("api feature admins",admins);
+    return admins;
+}
+
+export async function deleteAdmin(contract , address,mm_address) {
+    if (!contract) {
+        return;
+    }
+    try {
+        const value = await contract.methods.deleteAdmin(mm_address).send({ from: address });
+        console.log(value);
+        if(value){
+            return true;
+        }
+        return false;
+    }
+    catch(err) {
+        console.log(err);
+        return false;
+    }
+} 
+
 
 // const fetchContract = (signerOrProvider) => {
 //     console.log(MedivaultABI, MedivaultAddress);

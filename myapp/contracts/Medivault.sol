@@ -11,16 +11,16 @@ contract Medivault {
     mapping(address => SuperAdmin) public superAdmins;
     address[] public superAdminAddresses;
 
-    constructor() {  
+    constructor() {
         superAdminAddresses.push(msg.sender);
-        superAdmins[msg.sender] = SuperAdmin({ name : "Super admin" });
+        superAdmins[msg.sender] = SuperAdmin({name: "Super admin"});
     }
 
     function checkSuperAdmin(address pubkey) public view returns (bool) {
         return bytes(superAdmins[pubkey].name).length > 0;
     }
 
-    function editSuperAdmin(string memory name) public  {
+    function editSuperAdmin(string memory name) public {
         superAdmins[msg.sender].name = name;
     }
 
@@ -29,28 +29,76 @@ contract Medivault {
         superAdminAddresses.push(_address);
     }
 
-    function getAllSuperAdmins() public view returns (SuperAdmin[] memory) {
-        SuperAdmin[] memory admins = new SuperAdmin[](superAdminAddresses.length);
-        
-        for (uint i = 0; i < superAdminAddresses.length; i++) {
-            address adminAddress = superAdminAddresses[i];
-            admins[i] = superAdmins[adminAddress];
-        }
-        
-        return admins;
+    function getAllSuperAdmins() public view returns (address[] memory) {
+        return superAdminAddresses;
     }
 
-    function fetchSuperadmin(address _address) public view returns (SuperAdmin memory) {
+    function fetchNames() public view returns (string[] memory) {
+        string[] memory names = new string[](superAdminAddresses.length);
+        for (uint256 i = 0; i < superAdminAddresses.length; i++) {
+            names[i] = superAdmins[superAdminAddresses[i]].name;
+        }
+        return names;
+    }
+
+    function fetchSuperadmin(address _address)
+        public
+        view
+        returns (SuperAdmin memory)
+    {
         require(checkSuperAdmin(msg.sender), "Sender is not a super admin");
         return superAdmins[_address];
     }
 
+    function addAdmin(string calldata institution_name, address _address)
+        public
+    {
+        adminAddresses.push(_address);
+        admins[_address] = Admin({institution_name: institution_name});
+    }
 
+    function fetchAdminsAddresses() public view returns (address[] memory) {
+        return adminAddresses;
+    }
+
+    function fetchAdmins() public view returns (Admin[] memory) {
+        Admin[] memory _admins = new Admin[](adminAddresses.length);
+        for (uint256 i = 0; i < adminAddresses.length; i++) {
+            _admins[i] = admins[adminAddresses[i]];
+        }
+        return _admins;
+    }
+
+    function deleteAdmin(address _address) public returns (bool) {
+        delete admins[_address];
+        // search for the _address in the adminAddresses array and delete it
+        for (uint256 i = 0; i < adminAddresses.length; i++) {
+            if (adminAddresses[i] == _address) {
+                adminAddresses[i] = adminAddresses[adminAddresses.length - 1];
+                adminAddresses.pop(); // remove the last element
+                return true; // exit the function after successful deletion
+            }
+        }
+        return false; // return false if admin doesn't exist or sender is not a super admin
+    }
+
+    // Admin structure
+    struct Admin {
+        string institution_name;
+    }
+    mapping(address => Admin) public admins;
+    address[] public adminAddresses;
+
+    // admin functions
+    // function to check if an address is an admin
+    function checkAdmin(address pubkey) public view returns (bool) {
+        return bytes(admins[pubkey].institution_name).length > 0;
+    }
 
     // manually adding super admin for testing purposes
     // functions of super admin
     // function to check if an address is a super admin
-    
+
     // // // function to add a super admin
     // // function addSuperAdmin(address pubkey, string calldata name) public {
     // //     require(
@@ -100,20 +148,6 @@ contract Medivault {
     // }
 
     // // -------------------------------------------------------------------------------------------
-
-    // // Admin structure
-    // struct Admin {
-    //     string institution_name;
-    //     string institution_addr;
-    //     string institution_contact;
-    // }
-    // mapping(address => Admin) public admins;
-
-    // // admin functions
-    // // function to check if an address is an admin
-    // function checkAdmin(address pubkey) public view returns (bool) {
-    //     return bytes(admins[pubkey].institution_name).length > 0;
-    // }
 }
 
 // contract Medivault {

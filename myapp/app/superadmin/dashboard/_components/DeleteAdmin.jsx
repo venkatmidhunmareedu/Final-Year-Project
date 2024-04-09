@@ -16,7 +16,10 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
+import { useContext, useState } from "react"
+import { deleteAdmin } from "@/app/_utils/apiFeatures"
+import { SuperadminContext } from "../../_context/Superadmincontext"
+import { useToast } from "@/components/ui/use-toast"
 
 const formSchema = z.object({
     metamask_addr: z.string().min(42, {
@@ -25,6 +28,8 @@ const formSchema = z.object({
 })
 
 export function DeleteAdmin(props) {
+    const { toast } = useToast();
+    const { state, address } = useContext(SuperadminContext);
     // ...
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -34,6 +39,22 @@ export function DeleteAdmin(props) {
     })
     function onSubmit(values) {
         console.log(values);
+        const check = deleteAdmin(state.contract, address, values.metamask_addr);
+        if (check == true) {
+            toast({
+                title: "Info",
+                description: "Admin deleted successfully",
+            });
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        }
+        else {
+            toast({
+                title: "Error",
+                description: "Admin not deleted. Check admin address and try again!",
+            });
+        }
     }
 
     return (

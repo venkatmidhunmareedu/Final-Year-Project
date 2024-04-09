@@ -10,42 +10,51 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { SuperadminContext } from "../../_context/Superadmincontext";
+import { useContext, useEffect, useState } from "react";
+import { fetchAdmins, retriveAdminAddresses } from "@/app/_utils/apiFeatures";
 
 
 const AllAdmins = () => {
+    const { state, address } = useContext(SuperadminContext);
+    const [admins, setAdmins] = useState([]);
+    const [addresses, setAddresses] = useState([]);
+    useEffect(() => {
+        const retriveAdmins = async () => {
+            try {
+                const admins = await fetchAdmins(state.contract, address);
+                const adminAddrs = await retriveAdminAddresses(state.contract, address);
+                setAdmins(admins);
+                setAddresses(adminAddrs);
+                console.log("admins", admins);
+                console.log("adminAddrs", adminAddrs);
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+        retriveAdmins();
+    }, [])
     return (
         <div>
             {/* <Input placeholder="Search by Institution name" className="w-full mb-4" />
              */}
             {/* search feature to be implemented */}
             <div className="flex justify-center flex-col gap-3 overflow-auto scrollbar">
-                <Card >
-                    <CardHeader className="flex">
-                        <CardTitle className="text-sm">Institution name</CardTitle>
-                        <CardDescription className="text-xs">Account Address : 0xfd17Ab831C8a6ad212167036123DC6f7b8Fe818a</CardDescription>
-                        <CardDescription className="text-xs w-full">
-                            Institution Address : Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                        </CardDescription>
-                    </CardHeader>
-                </Card>
-                <Card >
-                    <CardHeader className="flex">
-                        <CardTitle className="text-sm">Institution name</CardTitle>
-                        <CardDescription className="text-xs">0xfd17Ab831C8a6ad212167036123DC6f7b8Fe818a</CardDescription>
-                        <CardDescription className="text-xs w-full">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam, perspiciatis architecto! Harum vero officia error exercitationem quam, ex dicta dolorum hic nisi facilis assumenda repellendus quas ad, aliquid consectetur cumque.
-                        </CardDescription>
-                    </CardHeader>
-                </Card>
-                <Card >
-                    <CardHeader className="flex">
-                        <CardTitle className="text-sm">Institution name</CardTitle>
-                        <CardDescription className="text-xs">0xfd17Ab831C8a6ad212167036123DC6f7b8Fe818a</CardDescription>
-                        <CardDescription className="text-xs w-full">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam, perspiciatis architecto! Harum vero officia error exercitationem quam, ex dicta dolorum hic nisi facilis assumenda repellendus quas ad, aliquid consectetur cumque.
-                        </CardDescription>
-                    </CardHeader>
-                </Card>
+                {
+                    admins == [] ? 
+                    admins.map((admin, index) => {
+                        return (
+                            <Card key={index}>
+                                <CardHeader className="flex">
+                                    <CardTitle className="text-sm">Institution name : <b>{admin[index]}</b></CardTitle>
+                                    <CardDescription className="text-xs">Account Address : {addresses[index]}</CardDescription>
+                                </CardHeader>
+                            </Card>
+                        )
+                    })
+                    : 
+                    <p>No Admins</p>
+                }
             </div>
         </div>
     )

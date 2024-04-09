@@ -19,42 +19,40 @@ import { Input } from "@/components/ui/input"
 import { useContext, useState } from "react"
 import { Textarea } from "@/components/ui/textarea"
 import { SuperadminContext } from "../../_context/Superadmincontext"
-import { addAdmin } from "@/app/_utils/apiFeatures"
+import { addSuperAdmin } from "@/app/_utils/apiFeatures"
 import { useToast } from "@/components/ui/use-toast"
 
 const formSchema = z.object({
+    name: z.string().min(5, {
+        message: "Institution name must be at least 5 characters.",
+    }),
     metamask_addr: z.string().min(42, {
         message: "Metamask address must be at least 42 characters.",
-    }),
-    institution_name: z.string().min(5, {
-        message: "Metamask address must be at least 5 characters.",
     })
 })
 
-export function AddAdmin(props) {
+export function AddSuperAdmin(props) {
     const { state,address,name } = useContext(SuperadminContext);
-    // ...
     const { toast } = useToast();
+    // ...
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             metamask_addr: "",
-            institution_name : "",
+            name : "",
         },
     })
 
     function onSubmit(values) {
-        console.log(values);
-        console.log("Hit")
-        const check = addAdmin(state.contract,address,values.institution_name,values.metamask_addr);
+        const check = addSuperAdmin(state.contract,values.metamask_addr,address,values.name)
         if(check){
             toast({
                 title: "Info",
                 description: "Admin added successfully",
             })
-            // setTimeout(() => {
-            //     window.location.reload();
-            // },1000)
+            setTimeout(() => {
+                window.location.reload();
+            },1500)
         }
         else {
             toast({
@@ -62,6 +60,7 @@ export function AddAdmin(props) {
                 description: "Super Admin not added. Problem with the Network",
             })
         }
+        console.log(values);
     }
 
     return (
@@ -69,12 +68,12 @@ export function AddAdmin(props) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
                     control={form.control}
-                    name="institution_name"
+                    name="name"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Institution name</FormLabel>
+                            <FormLabel>Username</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter Institution name" className="w-full" {...field} />
+                                <Input placeholder="username" className="w-full" {...field} />
                             </FormControl>
                             {/* <FormDescription>
                                 Enter the name of the institution
