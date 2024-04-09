@@ -40,7 +40,7 @@ export function DeleteAdmin(props) {
     function onSubmit(values) {
         console.log(values);
         const check = deleteAdmin(state.contract, address, values.metamask_addr);
-        if (check == true) {
+        if (check) {
             toast({
                 title: "Info",
                 description: "Admin deleted successfully",

@@ -4,7 +4,7 @@ import Web3 from 'web3';
 import Loader from './_components/Loader';
 import { useRouter } from 'next/navigation';
 import Medivault from "../contracts/Medivault.json";
-import { connectWallet, setterFunction, checkSuperAdminRole } from '../_utils/apiFeatures';
+import { connectWallet, setterFunction, checkSuperAdminRole, checkAdminRole } from '../_utils/apiFeatures';
 import { useToast } from '@/components/ui/use-toast';
 
 const App = () => {
@@ -46,6 +46,7 @@ const App = () => {
 
             // Once state is updated with contract, call checkSuperAdminRole
             const checksuperadmin = await checkSuperAdminRole(contract, walletaddress);
+            const checkAdmin = await checkAdminRole(contract, walletaddress);
             console.log("checksuperadmin", checksuperadmin);
             if (checksuperadmin) {
                 console.log("Updated role");
@@ -58,6 +59,18 @@ const App = () => {
                 })
                 setTimeout(() => {
                     router.push("/superadmin/dashboard");
+                },4000)
+            }
+            else if(checkAdmin){
+                setRole("Admin");
+                setIsConnected(true);
+                startCountdown();
+                toast({
+                    title: "Info",
+                    description: `Identified as admin. Redirecting you to your Dashboard!`,
+                })
+                setTimeout(() => {
+                    router.push("/admin/dashboard");
                 },4000)
             }
             else {

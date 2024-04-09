@@ -1,6 +1,8 @@
 import Web3 from "web3";
 import Medivault from "../contracts/Medivault.json";
 
+
+// base functions 
 export const connectWallet = async () => {
     try {
         if (!window.ethereum) {
@@ -17,6 +19,10 @@ export const connectWallet = async () => {
     }
 }
 
+// ----------------------------------------------------------------------------------------------------
+
+// super admin functions 
+
 export const setterFunction = async (provider) => {
     const web3 = new Web3(provider);
     const networkId = await web3.eth.net.getId();
@@ -24,6 +30,7 @@ export const setterFunction = async (provider) => {
     const contract = new web3.eth.Contract(Medivault.abi, deployedNetwork && deployedNetwork.address);
     return { web3, contract }
 }
+
 
 
 export async function checkSuperAdminRole(contract,address) {
@@ -145,6 +152,18 @@ export async function deleteAdmin(contract , address,mm_address) {
         return false;
     }
 } 
+
+
+// ----------------------------------------------------------------------------------------------------
+// admin functions
+
+export async function checkAdminRole(contract,address) {
+    if (!contract) {
+        return null;
+    } 
+    const checkadmin = await contract.methods.checkAdmin(address).call({ from: address });
+    return checkadmin;
+}
 
 
 // const fetchContract = (signerOrProvider) => {

@@ -41,7 +41,7 @@ const AllAdmins = () => {
             {/* search feature to be implemented */}
             <div className="flex justify-center flex-col gap-3 overflow-auto scrollbar">
                 {
-                    admins == [] ? 
+                    admins && admins.length > 0 ? 
                     admins.map((admin, index) => {
                         return (
                             <Card key={index}>
