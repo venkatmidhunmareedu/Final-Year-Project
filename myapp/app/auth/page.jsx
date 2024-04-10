@@ -12,6 +12,7 @@ const App = () => {
     const [timerId, setTimerId] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
     const router = useRouter();
+    const [loading, setLoading] = useState(true);
 
     const [data, setData] = useState(null);
     const { toast } = useToast();
@@ -55,7 +56,7 @@ const App = () => {
                 startCountdown();
                 toast({
                     title: "Info",
-                    description: `Identified as super admin. Redirecting you to your Dashboard!`,
+                    description: `Identified as Super Admin. Redirecting you to your Dashboard!`,
                 })
                 setTimeout(() => {
                     router.push("/superadmin/dashboard");
@@ -74,7 +75,8 @@ const App = () => {
                 },4000)
             }
             else {
-                setRole("Not a super admin");
+                // setRole("Not a super admin");
+                setIsConnected(false);
                 toast({
                     title: "Info",
                     description: "You don't have an account in Medivault. Please ask your doctor to create one.",
@@ -118,7 +120,7 @@ const App = () => {
             <div className='p-5 bg-gray-100 rounded border flex flex-col'>
                 <div className='text-lg font-bold text-center'>
                     {
-                        isConnected ? "Connected" : "Connecting to your MetaMask wallet"
+                        isConnected ? "Connected" : "Wallet Not Connected"
                     }
                 </div>
                 <div className=''>
@@ -128,7 +130,7 @@ const App = () => {
                 </div>
                 <div className='flex justify-center'>
                     {
-                        role && <div><b>Role</b> : {role}</div>
+                        role ? <div><b>Role</b> : {role}</div> : <div><b>You Don't have an account in Medivault</b> </div>
                     }
                 </div>
                 <p className='text-center'>

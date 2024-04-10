@@ -41,18 +41,17 @@ contract Medivault {
         return names;
     }
 
-    function fetchSuperadmin(address _address)
-        public
-        view
-        returns (SuperAdmin memory)
-    {
+    function fetchSuperadmin(
+        address _address
+    ) public view returns (SuperAdmin memory) {
         require(checkSuperAdmin(msg.sender), "Sender is not a super admin");
         return superAdmins[_address];
     }
 
-    function addAdmin(string calldata institution_name, address _address)
-        public
-    {
+    function addAdmin(
+        string calldata institution_name,
+        address _address
+    ) public {
         adminAddresses.push(_address);
         admins[_address] = Admin({institution_name: institution_name});
     }
@@ -82,6 +81,8 @@ contract Medivault {
         return false; // return false if admin doesn't exist or sender is not a super admin
     }
 
+    // -----------------------------------------------------------------------------------------
+
     // Admin structure
     struct Admin {
         string institution_name;
@@ -93,6 +94,76 @@ contract Medivault {
     // function to check if an address is an admin
     function checkAdmin(address pubkey) public view returns (bool) {
         return bytes(admins[pubkey].institution_name).length > 0;
+    }
+
+    function fetchAdmin(address pubkey) public view returns (Admin memory) {
+        return admins[pubkey];
+    }
+
+    function editAdmin(
+        address pubkey,
+        string memory institution_name
+    ) public  returns (bool) {
+        admins[pubkey].institution_name = institution_name;
+        return true;
+    }
+
+    function addDoctor(
+        string calldata name,
+        string calldata specialization,
+        address pubkey
+    ) public returns (bool) {
+        doctors[pubkey] = Doctor({
+            name: name,
+            specialization: specialization,
+            institution : msg.sender
+        });
+        doctorAddresses.push(pubkey);
+        return true;
+    }
+
+    function deleteDoctor(address pubkey) public returns (bool) {
+        // delete the address in the doctorAddresses array 
+        for (uint256 i = 0; i < doctorAddresses.length; i++) {
+            if (doctorAddresses[i] == pubkey) {
+                doctorAddresses[i] = doctorAddresses[doctorAddresses.length - 1];
+                doctorAddresses.pop();
+                break;
+            }
+        }
+        // delete main doctor structure
+        delete doctors[pubkey];
+        return true;
+    }
+
+    function fetchDoctors() public view returns (Doctor[] memory) {
+        Doctor[] memory _doctors = new Doctor[](doctorAddresses.length);
+        for (uint256 i = 0; i < doctorAddresses.length; i++) {
+            _doctors[i] = doctors[doctorAddresses[i]];
+        }
+        return _doctors;
+    }
+
+    function fetchDoctorAddresses() public view returns (address[] memory) {
+        return doctorAddresses;
+    }
+
+    // -----------------------------------------------------------------------------------------
+
+    // doctor structure
+    struct Doctor {
+        string name;
+        string specialization;
+        // string contact;
+        address institution;
+    }
+    mapping(address => Doctor) public doctors;
+    address[] public doctorAddresses;
+
+    // doctor functions
+    // function to check if an address is a doctor
+    function checkDoctor(address pubkey) public view returns (bool) {
+        return bytes(doctors[pubkey].name).length > 0;
     }
 
     // manually adding super admin for testing purposes

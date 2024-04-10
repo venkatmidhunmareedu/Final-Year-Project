@@ -91,7 +91,7 @@ export async function addSuperAdmin(contract , mm_address,address, name ) {
         return;
     } // Ensure contract is not null
     try {
-        const value = await contract.methods.addSuperAdmin(mm_address , name).send({ from: address });
+        const value = await contract.methods.addSuperAdmin(mm_address , name).send({ from: address , gas: 200000});
         console.log(value)
         return true
     }
@@ -107,7 +107,7 @@ export async function addAdmin(contract , address, insitution_name,mm_address ) 
         return;
     }
     try {
-        const value = await contract.methods.addAdmin(insitution_name,mm_address).send({ from: address });
+        const value = await contract.methods.addAdmin(insitution_name,mm_address).send({ from: address , gas: 200000 });
         console.log(value);
         return true;
     }
@@ -165,6 +165,71 @@ export async function checkAdminRole(contract,address) {
     return checkadmin;
 }
 
+export async function fetchAdmin(contract, address) {
+    if (!contract) {
+        return null;
+    }
+    const admin = await contract.methods.fetchAdmin(address).call({ from: address });
+    return admin;
+}
+
+export async function editAdmin(contract , address , name ) {
+    if (!contract) {
+        return null;
+    }
+    try {
+        const value = await contract.methods.editAdmin( address , name).send({ from: address });
+        console.log("Edited admin")
+        return true
+    }
+    catch(err) {
+        console.log(err);
+        return false;
+    }
+}
+
+
+export async function addDoctor(contract , address , name , specilization , mm_address) {
+    if (!contract) {
+        return null;
+    }
+    try {
+        const value = await contract.methods.addDoctor(name,specilization,mm_address).send({ from: address , gas: 200000 });
+        console.log(value)
+        return true
+    }
+    catch(err) {
+        console.log(err);
+        return false;
+    }
+}
+
+export async function fetchDoctors(contract, address) {
+    if (!contract) {
+        return null;
+    }
+    const doctors = await contract.methods.fetchDoctors().call({ from: address });
+    const doctorAddress = await contract.methods.fetchDoctorAddresses().call({ from: address });
+    return { doctors , doctorAddress };
+}
+
+export async function deleteDoctor(contract , address , mm_address) {
+    if(!contract) {
+        return null;
+    }
+    try {
+        const value = await contract.methods.deleteDoctor(mm_address).send({ from: address });
+        console.log(value);
+        if(value){
+            return true;
+        }
+        return false;
+    }
+    catch(err){
+        console.log(err);
+        return false;
+    }
+}
 
 // const fetchContract = (signerOrProvider) => {
 //     console.log(MedivaultABI, MedivaultAddress);

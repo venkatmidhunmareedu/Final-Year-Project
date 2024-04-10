@@ -1,3 +1,5 @@
+
+
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -17,10 +19,11 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useState, useContext, useEffect } from "react"
-import { SuperadminContext } from "../../_context/Superadmincontext"
-import { editSuperAdmin } from "@/app/_utils/apiFeatures"
+import { AdminContext } from "../../_context/Admincontext"
+// import { editAdmin } from "@/app/_utils/apiFeatures"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
+import { editAdmin } from "@/app/_utils/apiFeatures"
 
 const formSchema = z.object({
     username: z.string().min(4, {
@@ -28,18 +31,13 @@ const formSchema = z.object({
     }),
 })
 
-export function AccountDetails() {
+const AccountDetails = () => {
     const { toast } = useToast();
     const { router } = useRouter();
     const [isDisabled, setIsDisabled] = useState({ "disabled": "disabled", check: true })
 
-    const { state, name, address, provider } = useContext(SuperadminContext);
+    const { state, name, address, provider } = useContext(AdminContext);
     const [username, setUsername] = useState(name);
-
-    // ...
-    // useEffect(() => {
-    //     setUsername(name)
-    // }, [username])
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -50,30 +48,27 @@ export function AccountDetails() {
 
     function onSubmit(values) {
         console.log(values);
-        const check = editSuperAdmin(state.contract, address, values.username)
-        console.log({
-            contract: state.contract,
-            address: address,
-            username: values.username
-        });
+        const check = editAdmin(state.contract, address, values.username);
         if (check) {
             setIsDisabled({ "disabled": "disabled", check: true })
             // setUsername(values.username)
             setTimeout(() => {
                 window.location.reload();
-            },1000)
+            }, 1000)
 
             toast({
                 title: "Info",
                 description: "Username set successfully"
             })
-        } else {
+        }
+        else {
             toast({
                 title: "Error",
                 description: "Username not set"
             })
         }
     }
+
 
     return (
         <Form {...form}>
@@ -109,3 +104,5 @@ export function AccountDetails() {
         </Form>
     )
 }
+
+export default AccountDetails
