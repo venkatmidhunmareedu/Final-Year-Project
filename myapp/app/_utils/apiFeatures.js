@@ -231,6 +231,27 @@ export async function deleteDoctor(contract , address , mm_address) {
     }
 }
 
+
+// ----------------------------------------------------------------------------------------------------
+
+// Doctor functions 
+
+export async function checkDoctorRole(contract,address) {
+    if (!contract) {
+        return null;
+    } 
+    const checkdoctor = await contract.methods.checkDoctor(address).call({ from: address });
+    return checkdoctor;
+}
+
+export async function fetchDoctor(contract, address) {
+    if (!contract) {
+        return null;
+    }
+    const doctor = await contract.methods.fetchDoctor(address).call({ from: address });
+    return doctor;
+}
+
 // const fetchContract = (signerOrProvider) => {
 //     console.log(MedivaultABI, MedivaultAddress);
 

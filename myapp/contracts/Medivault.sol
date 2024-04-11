@@ -41,17 +41,18 @@ contract Medivault {
         return names;
     }
 
-    function fetchSuperadmin(
-        address _address
-    ) public view returns (SuperAdmin memory) {
+    function fetchSuperadmin(address _address)
+        public
+        view
+        returns (SuperAdmin memory)
+    {
         require(checkSuperAdmin(msg.sender), "Sender is not a super admin");
         return superAdmins[_address];
     }
 
-    function addAdmin(
-        string calldata institution_name,
-        address _address
-    ) public {
+    function addAdmin(string calldata institution_name, address _address)
+        public
+    {
         adminAddresses.push(_address);
         admins[_address] = Admin({institution_name: institution_name});
     }
@@ -100,10 +101,10 @@ contract Medivault {
         return admins[pubkey];
     }
 
-    function editAdmin(
-        address pubkey,
-        string memory institution_name
-    ) public  returns (bool) {
+    function editAdmin(address pubkey, string memory institution_name)
+        public
+        returns (bool)
+    {
         admins[pubkey].institution_name = institution_name;
         return true;
     }
@@ -116,17 +117,19 @@ contract Medivault {
         doctors[pubkey] = Doctor({
             name: name,
             specialization: specialization,
-            institution : msg.sender
+            institution: msg.sender
         });
         doctorAddresses.push(pubkey);
         return true;
     }
 
     function deleteDoctor(address pubkey) public returns (bool) {
-        // delete the address in the doctorAddresses array 
+        // delete the address in the doctorAddresses array
         for (uint256 i = 0; i < doctorAddresses.length; i++) {
             if (doctorAddresses[i] == pubkey) {
-                doctorAddresses[i] = doctorAddresses[doctorAddresses.length - 1];
+                doctorAddresses[i] = doctorAddresses[
+                    doctorAddresses.length - 1
+                ];
                 doctorAddresses.pop();
                 break;
             }
@@ -164,6 +167,181 @@ contract Medivault {
     // function to check if an address is a doctor
     function checkDoctor(address pubkey) public view returns (bool) {
         return bytes(doctors[pubkey].name).length > 0;
+    }
+
+    function fetchDoctor(address pubkey) public view returns (Doctor memory) {
+        return doctors[pubkey];
+    }
+
+    function addPatient(
+        string calldata name,
+        uint256 age,
+        string calldata gender,
+        string calldata addr,
+        string calldata contact,
+        address institution,
+        address pubkey
+    ) public returns (bool) {
+        // check if a patient with the pubkey already exists
+        if (checkPatient(pubkey)) {
+            return false;
+        }
+        address[] memory nominees;
+        patients[pubkey] = Patient({
+            name: name,
+            age: age,
+            gender: gender,
+            addr: addr,
+            contact: contact,
+            institution: institution,
+            nominees: nominees
+        });
+        patientAddresses.push(pubkey);
+        return true;
+    }
+
+    // function to delete a patient
+    function deletePatient(address pubkey) public returns (bool) {
+        // delete the address in the patientAddresses array
+        // check if the address exists in the patientAddresses array
+        if (!checkAdmin(pubkey)) {
+            return false;
+        }
+        for (uint256 i = 0; i < patientAddresses.length; i++) {
+            if (patientAddresses[i] == pubkey) {
+                patientAddresses[i] = patientAddresses[
+                    patientAddresses.length - 1
+                ];
+                patientAddresses.pop();
+                break;
+            }
+        }
+        // delete main patient structure
+        delete patients[pubkey];
+        return true;
+    }
+
+    // function to create a record
+    function createRecord(
+        address patient,
+        string calldata record_title,
+        string calldata record_desc,
+        string calldata record_data
+    ) public returns (bool) {
+        bytes32 record_hash = keccak256(
+            abi.encodePacked(
+                msg.sender,
+                patient,
+                record_title,
+                record_desc,
+                record_data
+            )
+        );
+        address[] memory read_allowed_doctors;
+        address[] memory write_allowed_doctors;
+
+        records[record_hash] = Record({
+            doctor: msg.sender,
+            patient: patient,
+            read_allowed_doctors: read_allowed_doctors,
+            write_allowed_doctors: write_allowed_doctors,
+            record_title: record_title,
+            record_desc: record_desc,
+            record_data: record_data
+        });
+        recordHashes.push(record_hash);
+        return true;
+    }
+
+    // function to fetch a record
+    function getRecord(bytes32 record_hash)
+        public
+        view
+        returns (Record memory)
+    {
+        // check if the record exists
+        return records[record_hash];
+    }
+
+    // function to check if the doctor has read access 
+    function checkReadAccess(bytes32 record_hash) public view returns (bool) {
+        Record memory record = records[record_hash];
+        for (uint256 i = 0; i < record.read_allowed_doctors.length; i++) {
+            if (record.read_allowed_doctors[i] == msg.sender) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //function to check if the doctor has write access
+    function checkWriteAccess(bytes32 record_hash) public view returns (bool) {
+        Record memory record = records[record_hash];
+        for (uint256 i = 0; i < record.write_allowed_doctors.length; i++) {
+            if (record.write_allowed_doctors[i] == msg.sender) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // function to edit record data by doctor
+    function editRecord(
+        bytes32 record_hash,
+        string calldata record_title,
+        string calldata record_desc,
+        string calldata record_data
+    ) public returns (bool) {
+        Record memory record = records[record_hash];
+        if (checkDoctor(record.doctor) == false) {
+            return false;
+        }
+        record.record_title = record_title;
+        record.record_desc = record_desc;
+        record.record_data = record_data;
+        records[record_hash] = record;
+        return true;
+    }
+
+    // -----------------------------------------------------------------------------------------
+
+    // patient structure
+    struct Patient {
+        string name;
+        uint256 age;
+        string gender;
+        string addr;
+        string contact;
+        address institution;
+        address[] nominees;
+    }
+    mapping(address => Patient) public patients;
+    address[] public patientAddresses;
+
+    // patient functions
+    // function to check if an address is a patient
+    function checkPatient(address pubkey) public view returns (bool) {
+        return bytes(patients[pubkey].name).length > 0;
+    }
+
+    // -----------------------------------------------------------------------------------------
+    // Patient Record Structure
+    struct Record {
+        address doctor;
+        address patient;
+        address[] read_allowed_doctors;
+        address[] write_allowed_doctors;
+        string record_title;
+        string record_desc;
+        string record_data;
+    }
+    mapping(bytes32 => Record) public records;
+    bytes32[] public recordHashes;
+
+    // patient record functions
+    // function to check if a record exists or not
+    function checkRecord(bytes32 record_hash) public view returns (bool) {
+        return bytes(records[record_hash].record_title).length > 0;
     }
 
     // manually adding super admin for testing purposes
