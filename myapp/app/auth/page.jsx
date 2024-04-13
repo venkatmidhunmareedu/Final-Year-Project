@@ -4,7 +4,7 @@ import Web3 from 'web3';
 import Loader from './_components/Loader';
 import { useRouter } from 'next/navigation';
 import Medivault from "../contracts/Medivault.json";
-import { connectWallet, setterFunction, checkSuperAdminRole, checkAdminRole, checkDoctorRole } from '../_utils/apiFeatures';
+import { connectWallet, setterFunction, checkSuperAdminRole, checkAdminRole, checkDoctorRole, checkPatient } from '../_utils/apiFeatures';
 import { useToast } from '@/components/ui/use-toast';
 
 const App = () => {
@@ -49,6 +49,7 @@ const App = () => {
             const checksuperadmin = await checkSuperAdminRole(contract, walletaddress);
             const checkAdmin = await checkAdminRole(contract, walletaddress);
             const checkDoctor = await checkDoctorRole(contract, walletaddress);
+            const checkpatient = await checkPatient(contract, walletaddress,walletaddress);
             console.log("checksuperadmin", checksuperadmin);
             console.log("checkDoctor",checkDoctor);
             if (checksuperadmin) {
@@ -88,12 +89,24 @@ const App = () => {
                     router.push("/doctor/dashboard");
                 },4000)
             }
+            else if (checkpatient) {
+                setRole("Patient");
+                setIsConnected(true);
+                startCountdown();
+                toast({
+                    title: "Info",
+                    description: `Identified as patient. Redirecting you to your Dashboard!`,
+                })
+                setTimeout(() => {
+                    router.push("/patient/dashboard");
+                },4000)
+            }
             else {
                 // setRole("Not a super admin");
                 setIsConnected(false);
                 toast({
                     title: "Info",
-                    description: "You don't have an account in Medivault. Please ask your doctor to create one.",
+                    description: "You don't have an account in Medivault. Please ask your superior to create one.",
                 })
             }
         }

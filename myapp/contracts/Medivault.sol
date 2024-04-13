@@ -237,8 +237,12 @@ contract Medivault {
                 record_data
             )
         );
-        address[] memory read_allowed_doctors;
-        address[] memory write_allowed_doctors;
+        address[] memory read_allowed_doctors = new address[](1);
+        address[] memory write_allowed_doctors = new address[](1);
+
+        read_allowed_doctors[0] = msg.sender;
+
+        write_allowed_doctors[0] = msg.sender;
 
         records[record_hash] = Record({
             doctor: msg.sender,
@@ -263,7 +267,7 @@ contract Medivault {
         return records[record_hash];
     }
 
-    // function to check if the doctor has read access 
+    // function to check if the doctor has read access
     function checkReadAccess(bytes32 record_hash) public view returns (bool) {
         Record memory record = records[record_hash];
         for (uint256 i = 0; i < record.read_allowed_doctors.length; i++) {
@@ -324,6 +328,11 @@ contract Medivault {
         return bytes(patients[pubkey].name).length > 0;
     }
 
+    //function to fetch a patient by address
+    function getPatient(address pubkey) public view returns (Patient memory) {
+        return patients[pubkey];
+    }
+
     // -----------------------------------------------------------------------------------------
     // Patient Record Structure
     struct Record {
@@ -342,6 +351,14 @@ contract Medivault {
     // function to check if a record exists or not
     function checkRecord(bytes32 record_hash) public view returns (bool) {
         return bytes(records[record_hash].record_title).length > 0;
+    }
+
+    function addReadAllowedDoctor(bytes32 record_hash, address doctor) public {
+        records[record_hash].read_allowed_doctors.push(doctor);
+    }
+
+    function addWriteAllowedDoctor(bytes32 record_hash, address doctor) public {
+        records[record_hash].write_allowed_doctors.push(doctor);
     }
 
     // manually adding super admin for testing purposes

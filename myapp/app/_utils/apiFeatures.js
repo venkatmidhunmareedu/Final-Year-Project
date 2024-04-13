@@ -33,10 +33,10 @@ export const setterFunction = async (provider) => {
 
 
 
-export async function checkSuperAdminRole(contract,address) {
+export async function checkSuperAdminRole(contract, address) {
     if (!contract) {
         return null;
-    } 
+    }
     const checksuperadmin = await contract.methods.checkSuperAdmin(address).call({ from: address });
     return checksuperadmin;
 }
@@ -44,7 +44,7 @@ export async function checkSuperAdminRole(contract,address) {
 
 
 export async function fetchSuperadmin(contract, address) {
-    if(!contract) {
+    if (!contract) {
         return null;
     }
     const superadmin = await contract.methods.fetchSuperadmin(address).call({ from: address });
@@ -61,17 +61,17 @@ export async function fetchSuperadmins(contract, address) {
     return superadmins;
 }
 
-export const retriveName = async (contract,address) =>  {
-    const data = await fetchSuperadmin(contract,address);
+export const retriveName = async (contract, address) => {
+    const data = await fetchSuperadmin(contract, address);
     return data.name;
 }
 
-export const retriveNames = async (contract,address) =>  {
+export const retriveNames = async (contract, address) => {
     const data = await contract.methods.fetchNames().call({ from: address });
     return data;
-} 
+}
 
-export async function editSuperAdmin(contract , address , name ) {
+export async function editSuperAdmin(contract, address, name) {
     if (!contract) {
         return;
     } // Ensure contract is not null
@@ -80,38 +80,38 @@ export async function editSuperAdmin(contract , address , name ) {
         // console.log(value)
         return true
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
         return false;
     }
 }
 
-export async function addSuperAdmin(contract , mm_address,address, name ) {
+export async function addSuperAdmin(contract, mm_address, address, name) {
     if (!contract) {
         return;
     } // Ensure contract is not null
     try {
-        const value = await contract.methods.addSuperAdmin(mm_address , name).send({ from: address , gas: 200000});
+        const value = await contract.methods.addSuperAdmin(mm_address, name).send({ from: address, gas: 200000 });
         console.log(value)
         return true
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
         return false;
     }
 }
 
 
-export async function addAdmin(contract , address, insitution_name,mm_address ) {
+export async function addAdmin(contract, address, insitution_name, mm_address) {
     if (!contract) {
         return;
     }
     try {
-        const value = await contract.methods.addAdmin(insitution_name,mm_address).send({ from: address , gas: 200000 });
+        const value = await contract.methods.addAdmin(insitution_name, mm_address).send({ from: address, gas: 200000 });
         console.log(value);
         return true;
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
         return false;
     }
@@ -122,7 +122,7 @@ export async function retriveAdminAddresses(contract, address) {
         return null;
     }
     const adminAddress = await contract.methods.fetchAdminsAddresses().call({ from: address });
-    console.log("api feature adminAddress",adminAddress);
+    console.log("api feature adminAddress", adminAddress);
     return adminAddress;
 }
 
@@ -131,36 +131,36 @@ export async function fetchAdmins(contract, address) {
         return null;
     }
     const admins = await contract.methods.fetchAdmins().call({ from: address });
-    console.log("api feature admins",admins);
+    console.log("api feature admins", admins);
     return admins;
 }
 
-export async function deleteAdmin(contract , address,mm_address) {
+export async function deleteAdmin(contract, address, mm_address) {
     if (!contract) {
         return;
     }
     try {
         const value = await contract.methods.deleteAdmin(mm_address).send({ from: address });
         console.log(value);
-        if(value){
+        if (value) {
             return true;
         }
         return false;
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
         return false;
     }
-} 
+}
 
 
 // ----------------------------------------------------------------------------------------------------
 // admin functions
 
-export async function checkAdminRole(contract,address) {
+export async function checkAdminRole(contract, address) {
     if (!contract) {
         return null;
-    } 
+    }
     const checkadmin = await contract.methods.checkAdmin(address).call({ from: address });
     return checkadmin;
 }
@@ -173,32 +173,32 @@ export async function fetchAdmin(contract, address) {
     return admin;
 }
 
-export async function editAdmin(contract , address , name ) {
+export async function editAdmin(contract, address, name) {
     if (!contract) {
         return null;
     }
     try {
-        const value = await contract.methods.editAdmin( address , name).send({ from: address });
+        const value = await contract.methods.editAdmin(address, name).send({ from: address });
         console.log("Edited admin")
         return true
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
         return false;
     }
 }
 
 
-export async function addDoctor(contract , address , name , specilization , mm_address) {
+export async function addDoctor(contract, address, name, specilization, mm_address) {
     if (!contract) {
         return null;
     }
     try {
-        const value = await contract.methods.addDoctor(name,specilization,mm_address).send({ from: address , gas: 200000 });
+        const value = await contract.methods.addDoctor(name, specilization, mm_address).send({ from: address, gas: 200000 });
         console.log(value)
         return true
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
         return false;
     }
@@ -210,22 +210,22 @@ export async function fetchDoctors(contract, address) {
     }
     const doctors = await contract.methods.fetchDoctors().call({ from: address });
     const doctorAddress = await contract.methods.fetchDoctorAddresses().call({ from: address });
-    return { doctors , doctorAddress };
+    return { doctors, doctorAddress };
 }
 
-export async function deleteDoctor(contract , address , mm_address) {
-    if(!contract) {
+export async function deleteDoctor(contract, address, mm_address) {
+    if (!contract) {
         return null;
     }
     try {
         const value = await contract.methods.deleteDoctor(mm_address).send({ from: address });
         console.log(value);
-        if(value){
+        if (value) {
             return true;
         }
         return false;
     }
-    catch(err){
+    catch (err) {
         console.log(err);
         return false;
     }
@@ -236,10 +236,10 @@ export async function deleteDoctor(contract , address , mm_address) {
 
 // Doctor functions 
 
-export async function checkDoctorRole(contract,address) {
+export async function checkDoctorRole(contract, address) {
     if (!contract) {
         return null;
-    } 
+    }
     const checkdoctor = await contract.methods.checkDoctor(address).call({ from: address });
     return checkdoctor;
 }
@@ -251,6 +251,87 @@ export async function fetchDoctor(contract, address) {
     const doctor = await contract.methods.fetchDoctor(address).call({ from: address });
     return doctor;
 }
+
+export async function addPatient(contract, address, name, age, gender, mm_address, contact, institution) {
+    if (!contract) {
+        return null;
+    }
+    try {
+        const value = await contract.methods.addPatient(name, age, gender, address, contact, institution, mm_address).send({ from: address, gas: 500000 });
+        console.log(value)
+        return true
+    }
+    catch (err) {
+        console.log(err);
+        return false;
+    }
+}
+
+export async function fetchPatient(contract, address, mm_address) {
+    if (!contract) {
+        console.log("Contract is null");
+        return null;
+    }
+    try {
+        const patient = await contract.methods.getPatient(mm_address).call({ from: address });
+        console.log(patient);
+        return patient;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+
+}
+
+export async function createRecord(contract, address, mm_address, record_title, record_description, record_data) {
+    if (!contract) {
+        return null;
+    }
+    try {
+        const value = await contract.methods.createRecord(mm_address, record_title, record_description, record_data).send({ from: address, gas: 1000000 });
+        console.log(value)
+        return true
+    }
+    catch (err) {
+        console.log(err);
+        return false;
+    }
+}
+
+export async function checkReadaccess(contract, address, record_hash) {
+    if (!contract) {
+        return null;
+    }
+    const checkaccess = await contract.methods.checkReadAccess(record_hash).call({ from: address });
+    return checkaccess;
+}
+
+export async function checkWriteaccess(contract, address, record_hash) {
+    if (!contract) {
+        return null;
+    }
+    const checkaccess = await contract.methods.checkWriteAccess(record_hash).call({ from: address });
+    return checkaccess;
+}
+export async function checkRecord(contract, address, record_hash) {
+    if (!contract) {
+        return null;
+    }
+    const checkrecord = await contract.methods.checkRecord(record_hash).call({ from: address });
+    return checkrecord;
+}
+
+// patient functions 
+export async function checkPatient(contract, address, mm_address) {
+    if (!contract) {
+        return null;
+    }
+    const checkpatient = await contract.methods.checkPatient(mm_address).call({ from: address });
+    console.log(checkpatient);
+    return checkpatient;
+}
+
 
 // const fetchContract = (signerOrProvider) => {
 //     console.log(MedivaultABI, MedivaultAddress);

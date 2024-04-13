@@ -3,9 +3,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DoctorContext } from "../_context/Doctorcontext";
 import { useContext } from "react"
-import AddPatient from "./_components/AddPatient";
-import CreateRecord from "./_components/CreateRecord";
+import { CreateRecord } from "./_components/CreateRecord";
 import FetchRecord from "./_components/FetchRecord";
+import { AddPatient } from "./_components/AddPatient";
+import FetchPatient from "./_components/FetchPatient";
 
 
 
@@ -33,6 +34,7 @@ const page = () => {
               <TabsTrigger value="add">Add Patient</TabsTrigger>
               <TabsTrigger value="create">Create Record</TabsTrigger>
               <TabsTrigger value="fetch">Fetch Record</TabsTrigger>
+              <TabsTrigger value="fetchpatient">Fetch Patient</TabsTrigger>
             </TabsList>
           </div>
           <div className="flex items-center justify-center">
@@ -45,9 +47,12 @@ const page = () => {
                 {/* <AllAdmins /> */}
                 <CreateRecord />
               </TabsContent>
-              <TabsContent value="fetch">
+              <TabsContent value="fetch" className="flex justify-center">
                 {/* <AllSuperAdmins /> */}
                 <FetchRecord />
+              </TabsContent>
+              <TabsContent value="fetchpatient">
+                <FetchPatient />
               </TabsContent>
             </div>
           </div>
