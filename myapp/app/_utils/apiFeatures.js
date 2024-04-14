@@ -332,6 +332,46 @@ export async function checkPatient(contract, address, mm_address) {
     return checkpatient;
 }
 
+export async function fetchPatientRecords(contract, address) {
+    if (!contract) {
+        return null;
+    }
+    const patientrecords = await contract.methods.getAllRecords().call({ from: address });
+    console.log(patientrecords);
+    return patientrecords;
+}
+
+export async function getNominees(contract, address) {
+    if (!contract) {
+        return null;
+    }
+    const nomineesAddress = await contract.methods.getNominees(address).call({ from: address });
+    // fetch addresses of all nominees by using a for loop
+    const nominees = [];
+    for (let i = 0; i < nominees.length; i++) {
+        const patient = await contract.methods.getPatient(nomineesAddress[i]).call({ from: address });
+        nominees.push(patient);
+    }
+    console.log({ nominees , nomineesAddress });
+    return { nominees , nomineesAddress };
+}
+
+// function to add a nominee
+export async  function addNominee(contract, address, mm_address) {
+    if (!contract) {
+        return null;
+    }
+    try {
+        const value = await contract.methods.addNominee(mm_address).send({ from: address });
+        console.log(value)
+        return true
+    }
+    catch (err) {
+        console.log(err);
+        return false;
+    }
+}
+
 
 // const fetchContract = (signerOrProvider) => {
 //     console.log(MedivaultABI, MedivaultAddress);

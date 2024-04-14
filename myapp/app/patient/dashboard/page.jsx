@@ -2,6 +2,11 @@
 import React, { useContext } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { PatientContext } from '../_context/Patientcontext';
+import { AccountDetails } from './_components/AccountDetails';
+import AllRecords from './_components/AllRecords';
+import NomineeRecords from './_components/NomineeRecords';
+import { AddNominee } from './_components/AddNominee';
+import YourNominees from './_components/YourNominees';
 
 const page = () => {
 
@@ -20,34 +25,33 @@ const page = () => {
             <div className="mt-5 flex justify-center items-center">
                 <Tabs defaultValue="account" className="w-full flex-col justify-center items-center">
                     <div className="flex justify-center items-center">
-                        <TabsList className="bg-slate-200 w-[70vw] space-x-10 rounded-lg">
+                        <TabsList className="bg-slate-200 w-[80vw] space-x-10 rounded-lg">
                             <TabsTrigger value="account" >Account Details</TabsTrigger>
-                            <TabsTrigger value="add">Add Admin</TabsTrigger>
-                            <TabsTrigger value="delete">Delete Admin</TabsTrigger>
-                            <TabsTrigger value="admins">All Admins</TabsTrigger>
-                            <TabsTrigger value="superadmins">All Super Admins</TabsTrigger>
-                            <TabsTrigger value="addadmin">Add Super Admin</TabsTrigger>
+                            <TabsTrigger value="allrecords">All Records</TabsTrigger>
+                            {/* <TabsTrigger value="access">Access Control</TabsTrigger>
+                            <TabsTrigger value="giveaccess">Give Access</TabsTrigger>
+                            <TabsTrigger value="revokeaccess">Revoke Access</TabsTrigger> */}
+                            <TabsTrigger value="nominee">Nominee Records</TabsTrigger>
+                            <TabsTrigger value="addnominee">Add Nominee</TabsTrigger>
+                            <TabsTrigger value="nominees">Your Nominees</TabsTrigger>
                         </TabsList>
                     </div>
                     <div className="flex items-center justify-center">
                         <div className="flex justify-start w-[60vw] h-[40vh] my-4 px-2 overflow-auto scrollbar">
                             <TabsContent value="account">
-                                {/* <AccountDetails name={name} /> */}
+                                <AccountDetails />
                             </TabsContent>
-                            <TabsContent value="add" className="">
-                                {/* <AddAdmin /> */}
+                            <TabsContent value="allrecords" className="">
+                                <AllRecords />
                             </TabsContent>
-                            <TabsContent value="delete">
-                                {/* <DeleteAdmin /> */}
+                            <TabsContent value="nominees">
+                                <YourNominees />
                             </TabsContent>
-                            <TabsContent value="admins">
-                                {/* <AllAdmins /> */}
+                            <TabsContent value="nominee">
+                                <NomineeRecords />
                             </TabsContent>
-                            <TabsContent value="superadmins">
-                                {/* <AllSuperAdmins /> */}
-                            </TabsContent>
-                            <TabsContent value="addadmin">
-                                {/* <AddSuperAdmin /> */}
+                            <TabsContent value="addnominee">
+                                <AddNominee />
                             </TabsContent>
                         </div>
                     </div>
