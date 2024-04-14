@@ -483,9 +483,7 @@ contract Medivault {
         if (!checkPatient(nominee)) {
             return false;
         }
-        patients[msg.sender].nominees[
-            patients[msg.sender].nominees.length
-        ] = nominee;
+        patients[msg.sender].nominees.push(nominee);
         return true;
     }
 

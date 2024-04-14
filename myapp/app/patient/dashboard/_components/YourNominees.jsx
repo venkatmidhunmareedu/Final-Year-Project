@@ -26,10 +26,10 @@ const YourNominees = () => {
             return (
               <div className='bg-slate-50  rounded-md border px-2 py-1 my-2' key={index}>
                 <p className='text-xs'>
-                  Name : {nominee.name[index]}
+                  Name : {nominee.name}
                 </p>
                 <p className='text-xs'>
-                  Address : {nominee.address[index]}
+                  Address : {nominees && nominees.nomineesAddress[index]}
                 </p>
               </div>
             )

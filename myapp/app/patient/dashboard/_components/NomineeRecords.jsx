@@ -1,7 +1,23 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import NomineeRecord from './NomineeRecord'
+import { FetchNomineeRecordsofPatient } from '@/app/_utils/apiFeatures';
+import { PatientContext } from '../../_context/Patientcontext';
 
 const NomineeRecords = () => {
+    const [ nomineeRecords , setNomineeRecords ] = useState(null);
+    const { state , address } = useContext(PatientContext);
+
+    // fetch nominee records
+    useEffect( () => {
+        // fetch all records
+        const _fetchRecords = async () => {
+            const contract = state.contract;
+            const records = await FetchNomineeRecordsofPatient(contract,address);
+            console.log(records);
+            setNomineeRecords(records);
+        }
+        state && address && _fetchRecords();
+    },[state])
     return (
         <div className='flex flex-col'>
             <div>

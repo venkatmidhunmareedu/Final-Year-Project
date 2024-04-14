@@ -336,7 +336,8 @@ export async function fetchPatientRecords(contract, address) {
     if (!contract) {
         return null;
     }
-    const patientrecords = await contract.methods.getAllRecords().call({ from: address });
+    // const patientrecords = await contract.methods.getAllRecords().call({ from: address });
+    const patientrecords = await contract.methods.getAllRecordsOfPatient(address).call({ from: address });
     console.log(patientrecords);
     return patientrecords;
 }
@@ -348,7 +349,7 @@ export async function getNominees(contract, address) {
     const nomineesAddress = await contract.methods.getNominees(address).call({ from: address });
     // fetch addresses of all nominees by using a for loop
     const nominees = [];
-    for (let i = 0; i < nominees.length; i++) {
+    for (let i = 0; i < nomineesAddress.length; i++) {
         const patient = await contract.methods.getPatient(nomineesAddress[i]).call({ from: address });
         nominees.push(patient);
     }
@@ -372,6 +373,30 @@ export async  function addNominee(contract, address, mm_address) {
     }
 }
 
+export async function FetchNomineeRecordsofPatient(contract, address) {
+    if (!contract) {
+        return null;
+    }
+    // get all nominees and loop around and fetch their records 
+    const { nominees ,  nomineesAddress } = await getNominees(contract, address);
+    const nomineerecords = [];
+    for (let i = 0; i < nominees.length; i++) {
+        const records = await contract.methods.getAllRecordsOfPatient(nomineesAddress[i]).call({ from: address });
+        nomineerecords.push({ nominee :  nominees[i],nomineeAddress : nomineesAddress[i],records});
+    }
+    console.log(nomineerecords);
+    return nomineerecords;
+}
+
+// function to fetch a record of a particular patient
+export async function fetchPatientRecord(contract, address, record_hash) {
+    if (!contract) {
+        return null;
+    }
+    const patientrecord = await contract.methods.getRecord(record_hash).call({ from: address });
+    console.log(patientrecord);
+    return patientrecord;
+} 
 
 // const fetchContract = (signerOrProvider) => {
 //     console.log(MedivaultABI, MedivaultAddress);

@@ -5,6 +5,7 @@ import { fetchPatientRecords } from '@/app/_utils/apiFeatures';
 
 
 
+
 const AllRecords = () => {
     const { state , address } = useContext(PatientContext);
     const [ records , setRecords ] = useState(null);
@@ -27,6 +28,9 @@ const AllRecords = () => {
                     records && records.map((record , index) => {
                         return <RecordCard key={index} record={record} />
                     })
+                }
+                {
+                    records && records.length == 0 && <p>No records found</p>
                 }
             </div>
         </div>

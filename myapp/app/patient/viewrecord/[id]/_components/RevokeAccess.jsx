@@ -20,7 +20,7 @@ import { useContext, useState } from "react"
 import { Textarea } from "@/components/ui/textarea"
 import { addAdmin } from "@/app/_utils/apiFeatures"
 import { useToast } from "@/components/ui/use-toast"
-import { PatientContext } from "../../_context/Patientcontext"
+import { PatientContext } from "@/app/patient/_context/Patientcontext"
 
 const formSchema = z.object({
     metamask_addr: z.string().min(42, {
@@ -28,7 +28,7 @@ const formSchema = z.object({
     }),
 })
 
-export function GiveAccess() {
+export function RevokeAccess() {
     const { state, address, name } = useContext(PatientContext);
     const [ clickedRead , setClickedRead ] = useState(false);
     const [ clickedWrite , setClickedWrite ] = useState(false);
@@ -91,14 +91,14 @@ export function GiveAccess() {
                             setClickedRead(true);
                             setClickedWrite(false);
                         }
-                    } >Give Read Access</Button>
+                    } >Revoke Read Access</Button>
                     <Button type="submit" 
                     onClick = { 
                         () => {
                             setClickedWrite(true);
                             setClickedRead(false);
                         }
-                    }>Give Write Access</Button>
+                    }>Revoke Write Access</Button>
                 </div>
             </form>
         </Form>
