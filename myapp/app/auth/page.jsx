@@ -8,7 +8,7 @@ import { connectWallet, setterFunction, checkSuperAdminRole, checkAdminRole, che
 import { useToast } from '@/components/ui/use-toast';
 
 const App = () => {
-    const [count, setCount] = useState(4);
+    const [count, setCount] = useState(5);
     const [timerId, setTimerId] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
     const router = useRouter();
@@ -54,7 +54,7 @@ const App = () => {
             console.log("checkDoctor",checkDoctor);
             if (checksuperadmin) {
                 console.log("Updated role");
-                setRole("super Admin");
+                setRole("Super Admin");
                 setIsConnected(true);
                 startCountdown();
                 toast({
