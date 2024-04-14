@@ -41,18 +41,17 @@ contract Medivault {
         return names;
     }
 
-    function fetchSuperadmin(address _address)
-        public
-        view
-        returns (SuperAdmin memory)
-    {
+    function fetchSuperadmin(
+        address _address
+    ) public view returns (SuperAdmin memory) {
         require(checkSuperAdmin(msg.sender), "Sender is not a super admin");
         return superAdmins[_address];
     }
 
-    function addAdmin(string calldata institution_name, address _address)
-        public
-    {
+    function addAdmin(
+        string calldata institution_name,
+        address _address
+    ) public {
         adminAddresses.push(_address);
         admins[_address] = Admin({institution_name: institution_name});
     }
@@ -101,10 +100,10 @@ contract Medivault {
         return admins[pubkey];
     }
 
-    function editAdmin(address pubkey, string memory institution_name)
-        public
-        returns (bool)
-    {
+    function editAdmin(
+        address pubkey,
+        string memory institution_name
+    ) public returns (bool) {
         admins[pubkey].institution_name = institution_name;
         return true;
     }
@@ -258,11 +257,9 @@ contract Medivault {
     }
 
     // function to fetch a record
-    function getRecord(bytes32 record_hash)
-        public
-        view
-        returns (Record memory)
-    {
+    function getRecord(
+        bytes32 record_hash
+    ) public view returns (Record memory) {
         // check if the record exists
         return records[record_hash];
     }
@@ -368,11 +365,9 @@ contract Medivault {
         Record recordData;
     }
 
-    function getAllRecordsOfPatient(address patient)
-        public
-        view
-        returns (RecordWithHash[] memory)
-    {
+    function getAllRecordsOfPatient(
+        address patient
+    ) public view returns (RecordWithHash[] memory) {
         uint256 count = 0;
         for (uint256 i = 0; i < recordHashes.length; i++) {
             if (records[recordHashes[i]].patient == patient) {
@@ -396,43 +391,35 @@ contract Medivault {
     }
 
     //function to fetch all the  read access members
-    function getReadAccessMembers(bytes32 record_hash)
-        public
-        view
-        returns (address[] memory)
-    {
+    function getReadAccessMembers(
+        bytes32 record_hash
+    ) public view returns (address[] memory) {
         Record memory record = records[record_hash];
         return record.read_allowed_doctors;
     }
 
     //function to fetch all the  write access members
-    function getWriteAccessMembers(bytes32 record_hash)
-        public
-        view
-        returns (address[] memory)
-    {
+    function getWriteAccessMembers(
+        bytes32 record_hash
+    ) public view returns (address[] memory) {
         Record memory record = records[record_hash];
         return record.write_allowed_doctors;
     }
 
-    //function to add member to read access of the record
     function addMemberToReadAccess(bytes32 record_hash, address member) public {
-        Record memory record = records[record_hash];
-        record.read_allowed_doctors[
-            record.read_allowed_doctors.length
-        ] = member;
-        records[record_hash] = record;
+        Record storage record = records[record_hash]; // Use 'storage' instead of 'memory'
+        record.read_allowed_doctors.push(member); // Use 'push' to add to dynamic array
+        records[record_hash] = record; // Update the stored record
     }
 
     //function to add member to write access of the record
-    function addMemberToWriteAccess(bytes32 record_hash, address member)
-        public
-    {
-        Record memory record = records[record_hash];
-        record.write_allowed_doctors[
-            record.write_allowed_doctors.length
-        ] = member;
-        records[record_hash] = record;
+    function addMemberToWriteAccess(
+        bytes32 record_hash,
+        address member
+    ) public {
+        Record storage record = records[record_hash]; // Use 'storage' instead of 'memory'
+        record.write_allowed_doctors.push(member); // Use 'push' to add to dynamic array
+        records[record_hash] = record; // Update the stored record
     }
 
     // function to revoke read access of the record
@@ -451,18 +438,10 @@ contract Medivault {
     }
 
     // function to revoke write access of the record with bool returns
-    function revokeWriteAccess(bytes32 record_hash, address member)
-        public
-        returns (bool)
-    {
-        // check if the record exists or not
-        if (!checkRecord(record_hash)) {
-            return false;
-        }
-        // check if the address if of patient's or not
-        if (!checkPatient(member)) {
-            return false;
-        }
+    function revokeWriteAccess(
+        bytes32 record_hash,
+        address member
+    ) public returns (bool) {
         Record storage record = records[record_hash];
         for (uint256 i = 0; i < record.write_allowed_doctors.length; i++) {
             if (record.write_allowed_doctors[i] == member) {
@@ -494,11 +473,9 @@ contract Medivault {
     // }
 
     //function to fetch a patient's nominees
-    function getNominees(address pubkey)
-        public
-        view
-        returns (address[] memory)
-    {
+    function getNominees(
+        address pubkey
+    ) public view returns (address[] memory) {
         return patients[pubkey].nominees;
     }
 

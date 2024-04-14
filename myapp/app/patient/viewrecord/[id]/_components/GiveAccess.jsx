@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { useContext, useState } from "react"
 import { Textarea } from "@/components/ui/textarea"
-import { addAdmin } from "@/app/_utils/apiFeatures"
+import { addAdmin, checkReadaccess, checkWriteaccess, giveReadAccess, giveWriteAccess } from "@/app/_utils/apiFeatures"
 import { useToast } from "@/components/ui/use-toast"
 import { PatientContext } from "@/app/patient/_context/Patientcontext"
 
@@ -28,10 +28,10 @@ const formSchema = z.object({
     }),
 })
 
-export function GiveAccess() {
+export function GiveAccess(props) {
     const { state, address, name } = useContext(PatientContext);
-    const [ clickedRead , setClickedRead ] = useState(false);
-    const [ clickedWrite , setClickedWrite ] = useState(false);
+    const [clickedRead, setClickedRead] = useState(false);
+    const [clickedWrite, setClickedWrite] = useState(false);
     // ...
     const { toast } = useToast();
     const form = useForm({
@@ -41,13 +41,58 @@ export function GiveAccess() {
         },
     })
 
-    function onSubmit(values) {
+    async function onSubmit(values) {
         console.log(values);
-        if(clickedRead && !clickedWrite) {
-            console.log("read" , values.metamask_addr);
+        if (clickedRead && !clickedWrite) {
+            console.log("read", values.metamask_addr);
+            var check = await checkReadaccess(state.contract, address, values.metamask_addr , props.id);
+            console.log("check" , check);
+            if (check) {
+                toast({
+                    title: "Info",
+                    description: "Already had read access for this address",
+                })
+            }
+            else {
+                check = giveReadAccess(state.contract, address, props.id,values.metamask_addr);
+                if (check) {
+                    toast({
+                        title: "Info",
+                        description: "Read access granted successfully",
+                    })
+                }
+                else{
+                    toast({
+                        title: "Error",
+                        description: "Problem with the Network or check your metamask address",
+                    })
+                }
+            }
         }
         else {
-            console.log("write" , values.metamask_addr);
+            console.log("write", values.metamask_addr);
+            var check_1 = await checkWriteaccess(state.contract, address,values.metamask_addr, props.id );
+            if (check_1) {
+                toast({
+                    title: "Info",
+                    description: "Already had write access for this address",
+                })
+            }
+            else {
+                check_1 = giveWriteAccess(state.contract, address, props.id,values.metamask_addr);
+                if (check_1) {
+                    toast({
+                        title: "Info",
+                        description: "Write access granted successfully",
+                    })
+                }
+                else {
+                    toast({
+                        title: "Error",
+                        description: "Problem with the Network or check your metamask address",
+                    })
+                }
+            }
         }
         // console.log("Hit")
         // const check = addAdmin(state.contract,address,values.institution_name,values.metamask_addr);
@@ -86,19 +131,19 @@ export function GiveAccess() {
                 />
 
                 <div className="flex space-x-1">
-                    <Button type="submit" onClick = {  
+                    <Button type="submit" onClick={
                         () => {
                             setClickedRead(true);
                             setClickedWrite(false);
                         }
                     } >Give Read Access</Button>
-                    <Button type="submit" 
-                    onClick = { 
-                        () => {
-                            setClickedWrite(true);
-                            setClickedRead(false);
-                        }
-                    }>Give Write Access</Button>
+                    <Button type="submit"
+                        onClick={
+                            () => {
+                                setClickedWrite(true);
+                                setClickedRead(false);
+                            }
+                        }>Give Write Access</Button>
                 </div>
             </form>
         </Form>

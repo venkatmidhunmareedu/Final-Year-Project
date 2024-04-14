@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { useContext, useState } from "react"
 import { Textarea } from "@/components/ui/textarea"
-import { addAdmin } from "@/app/_utils/apiFeatures"
+import { addAdmin, checkReadaccess, checkWriteaccess, revokeReadAccess, revokeWriteAccess } from "@/app/_utils/apiFeatures"
 import { useToast } from "@/components/ui/use-toast"
 import { PatientContext } from "@/app/patient/_context/Patientcontext"
 
@@ -28,7 +28,7 @@ const formSchema = z.object({
     }),
 })
 
-export function RevokeAccess() {
+export function RevokeAccess(props) {
     const { state, address, name } = useContext(PatientContext);
     const [ clickedRead , setClickedRead ] = useState(false);
     const [ clickedWrite , setClickedWrite ] = useState(false);
@@ -41,13 +41,57 @@ export function RevokeAccess() {
         },
     })
 
-    function onSubmit(values) {
+    async function onSubmit(values) {
         console.log(values);
         if(clickedRead && !clickedWrite) {
             console.log("read" , values.metamask_addr);
+            var check = await checkReadaccess(state.contract, address, values.metamask_addr , props.id);
+            if(!check) {
+                toast({
+                    title: "Info",
+                    description: "Already had no read access for this address",
+                })
+            }
+            else {
+                check = await revokeReadAccess(state.contract, address, props.id,values.metamask_addr);
+                if(check) {
+                    toast({
+                        title: "Info",
+                        description: "Read access revoked successfully",
+                    })
+                }
+                else {
+                    toast({
+                        title: "Error",
+                        description: "Problem with the Network or check your metamask address",
+                    })
+                }
+            }
         }
         else {
             console.log("write" , values.metamask_addr);
+            var check_1 = await checkWriteaccess(state.contract, address, values.metamask_addr , props.id);
+            if(!check_1) {
+                toast({
+                    title: "Info",
+                    description: "Already had no write access for this address",
+                })
+            }
+            else {
+                check_1 = await revokeWriteAccess(state.contract, address, props.id,values.metamask_addr);
+                if(check_1) {
+                    toast({
+                        title: "Info",
+                        description: "Write access revoked successfully",
+                    })
+                }
+                else{
+                    toast({
+                        title: "Error",
+                        description: "Problem with the Network or check your metamask address",
+                    })
+                }
+            }
         }
         // console.log("Hit")
         // const check = addAdmin(state.contract,address,values.institution_name,values.metamask_addr);

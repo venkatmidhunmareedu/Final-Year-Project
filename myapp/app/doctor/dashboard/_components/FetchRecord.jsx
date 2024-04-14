@@ -50,10 +50,10 @@ const FetchRecord = () => {
   const { state, address } = useContext(DoctorContext);
   const { toast } = useToast();
   const { push } = useRouter();
-  const [ record_hash ] = useState("");
-  const [ checkRead, setCheckRead ] = useState(false);
-  const [checkWrite , setCheckWrite] = useState(false);
-  const [ hidden , setHidden ] = useState(true);
+  const [record_hash, setRecord_hash] = useState("");
+  const [checkRead, setCheckRead] = useState(false);
+  const [checkWrite, setCheckWrite] = useState(false);
+  const [hidden, setHidden] = useState(true);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,11 +64,12 @@ const FetchRecord = () => {
   const onSubmit = async (values) => {
     console.log(values);
     const check = await checkRecord(state.contract, address, values.recordhash);
-    const readAccess = await checkReadaccess(state.contract, address, values.recordhash);
-    const writeAccess = await checkWriteaccess(state.contract, address, values.recordhash);
+    const readAccess = await checkReadaccess(state.contract, address, address, values.recordhash);
+    const writeAccess = await checkWriteaccess(state.contract, address, address, values.recordhash);
     setCheckRead(readAccess);
     setCheckWrite(writeAccess);
     if (check) {
+      setRecord_hash(values.recordhash);
       setHidden(false);
       toast({
         title: "Info",
@@ -78,7 +79,7 @@ const FetchRecord = () => {
     else {
       toast({
         title: "Error",
-        description: "Record not found. Problem with the Network",
+        description: "Record not found. Problem with the Network or check your record hash",
       })
     }
 
@@ -127,37 +128,41 @@ const FetchRecord = () => {
         <p className="text-gray-500 my-3 text-sm">
           Fetched record details will be displayed here
         </p>
-        <div className= { !hidden ? "hidden" :"w-[20vw] h-[25vh] bg-slate-200 p-4 rounded-md my-3 "}  >
+        <div className={hidden ? "hidden" : "w-[20vw] h-[25vh] bg-slate-200 p-4 rounded-md my-3 "}  >
           <div>
             <p className="text-sm">
               Record Hash
             </p>
-            <Input className="" disabled />
+            <Input className="" placeholder={record_hash} disabled />
           </div>
           <TooltipProvider>
             <div className="flex space-x-1 mt-3">
               <Tooltip>
                 <TooltipTrigger>
-                  <Button className="" onClick= { () => {
+                  <Button className="" onClick={() => {
                     if (checkRead) {
                       push("/doctor/viewrecord/" + record_hash)
                     }
-                  } }>View</Button>
+                  }} {...(checkRead ? { disabled: false } : { disabled: true })}>View</Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>You have view access for this record</p>
+                  {
+                    checkRead ? <p>You have view access for this record</p> : <p>You don't have view access for this record. Ask your patient to give you read access</p>
+                  }
                 </TooltipContent>
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger>
-                  <Button className="cursor-not-allowed" onClick={ () => {
+                  <Button className="disabled:cursor-not-allowed" onClick={() => {
                     if (checkWrite) {
                       push("/doctor/editrecord/" + record_hash)
                     }
-                  } } disabled>Edit</Button>
+                  }} {...(checkWrite ? { disabled: false } : { disabled: true })}>Edit</Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>You don't have edit access for this record. Ask your patient to give you write access</p>
+                  {
+                    checkWrite ? <p>You have edit access for this record</p> : <p>You don't have edit access for this record. Ask your patient to give you write access</p>
+                  }
                 </TooltipContent>
               </Tooltip>
             </div>

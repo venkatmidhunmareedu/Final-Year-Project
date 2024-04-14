@@ -33,18 +33,18 @@ const page = ({ params }) => {
             </TabsList>
           </div>
           <div className="flex items-center justify-center">
-            <div className="flex justify-start w-[60vw] h-[40vh] my-4 px-2 overflow-auto scrollbar">
+            <div className="flex justify-start w-[70vw] h-[40vh] my-4 px-2 overflow-auto scrollbar">
               <TabsContent value="details">
                 <RecordDetails id={params.id} />
               </TabsContent>
-              <TabsContent value="access" className="">
-                <AccessControl />
-              </TabsContent>
               <TabsContent value="give">
-                <GiveAccess />
+                <GiveAccess id={params.id} />
               </TabsContent>
               <TabsContent value="revoke">
-                <RevokeAccess />
+                <RevokeAccess id={params.id} />
+              </TabsContent>
+              <TabsContent value="access" className="">
+                <AccessControl id={params.id} />
               </TabsContent>
             </div>
           </div>

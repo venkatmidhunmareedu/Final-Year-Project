@@ -299,19 +299,20 @@ export async function createRecord(contract, address, mm_address, record_title, 
     }
 }
 
-export async function checkReadaccess(contract, address, record_hash) {
+export async function checkReadaccess(contract, address, mm_address, record_hash) {
     if (!contract) {
         return null;
     }
-    const checkaccess = await contract.methods.checkReadAccess(record_hash).call({ from: address });
+    const checkaccess = await contract.methods.checkReadAccess(record_hash).call({ from: mm_address });
+    console.log("checkreadaccess", checkaccess);
     return checkaccess;
 }
 
-export async function checkWriteaccess(contract, address, record_hash) {
+export async function checkWriteaccess(contract, address, mm_address, record_hash) {
     if (!contract) {
         return null;
     }
-    const checkaccess = await contract.methods.checkWriteAccess(record_hash).call({ from: address });
+    const checkaccess = await contract.methods.checkWriteAccess(record_hash).call({ from: mm_address });
     return checkaccess;
 }
 export async function checkRecord(contract, address, record_hash) {
@@ -353,12 +354,12 @@ export async function getNominees(contract, address) {
         const patient = await contract.methods.getPatient(nomineesAddress[i]).call({ from: address });
         nominees.push(patient);
     }
-    console.log({ nominees , nomineesAddress });
-    return { nominees , nomineesAddress };
+    console.log({ nominees, nomineesAddress });
+    return { nominees, nomineesAddress };
 }
 
 // function to add a nominee
-export async  function addNominee(contract, address, mm_address) {
+export async function addNominee(contract, address, mm_address) {
     if (!contract) {
         return null;
     }
@@ -378,11 +379,11 @@ export async function FetchNomineeRecordsofPatient(contract, address) {
         return null;
     }
     // get all nominees and loop around and fetch their records 
-    const { nominees ,  nomineesAddress } = await getNominees(contract, address);
+    const { nominees, nomineesAddress } = await getNominees(contract, address);
     const nomineerecords = [];
     for (let i = 0; i < nominees.length; i++) {
         const records = await contract.methods.getAllRecordsOfPatient(nomineesAddress[i]).call({ from: address });
-        nomineerecords.push({ nominee :  nominees[i],nomineeAddress : nomineesAddress[i],records});
+        nomineerecords.push({ nominee: nominees[i], nomineeAddress: nomineesAddress[i], records });
     }
     console.log(nomineerecords);
     return nomineerecords;
@@ -396,7 +397,98 @@ export async function fetchPatientRecord(contract, address, record_hash) {
     const patientrecord = await contract.methods.getRecord(record_hash).call({ from: address });
     console.log(patientrecord);
     return patientrecord;
-} 
+}
+
+// function to fetch read access members of a particular record
+export async function fetchReadAccessMembers(contract, address, record_hash) {
+    if (!contract) {
+        return null;
+    }
+    const readaccessmembers = await contract.methods.getReadAccessMembers(record_hash).call({ from: address });
+    console.log(readaccessmembers);
+    return readaccessmembers;
+}
+
+export async function fetchWriteAccessMembers(contract, address, record_hash) {
+    if (!contract) {
+        return null;
+    }
+    const writeaccessmembers = await contract.methods.getWriteAccessMembers(record_hash).call({ from: address });
+    console.log(writeaccessmembers);
+    return writeaccessmembers;
+}
+
+export async function giveReadAccess(contract, address, record_hash, patient_address) {
+    if (!contract) {
+        return null;
+    }
+    try {
+        const value = await contract.methods.addMemberToReadAccess(record_hash, patient_address).send({ from: address });
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return false;
+    }
+}
+
+export async function giveWriteAccess(contract, address, record_hash, patient_address) {
+    if (!contract) {
+        return null;
+    }
+    try {
+        const value = await contract.methods.addMemberToWriteAccess(record_hash, patient_address).send({ from: address });
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return false;
+    }
+}
+
+// function to revoke read access
+export async function revokeReadAccess(contract, address, record_hash, mm_address) {
+    if (!contract) {
+        return null;
+    }
+    try {
+        const value = await contract.methods.revokeReadAccess(record_hash, mm_address).send({ from: address });
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return false;
+    }
+}
+
+export async function revokeWriteAccess(contract, address, record_hash, mm_address) {
+    if (!contract) {
+        return null;
+    }
+    try {
+        const value = await contract.methods.revokeWriteAccess(record_hash, mm_address).send({ from: address });
+        console.log("revoke write access from contract", value);
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return false;
+    }
+}
+
+export async function editRecord(contract, address, record_hash, record_title, record_desc, record_data) {
+    if (!contract) {
+        return null;
+    }
+    try {
+        const value = await contract.methods.editRecord(record_hash, record_title, record_desc, record_data).send({ from: address });
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return false;
+    }
+}
 
 // const fetchContract = (signerOrProvider) => {
 //     console.log(MedivaultABI, MedivaultAddress);
