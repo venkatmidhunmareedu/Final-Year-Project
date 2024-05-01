@@ -28,12 +28,10 @@ const page = () => {
                         <TabsList className="bg-slate-200 w-[80vw] space-x-10 rounded-lg">
                             <TabsTrigger value="account" >Account Details</TabsTrigger>
                             <TabsTrigger value="allrecords">All Records</TabsTrigger>
-                            {/* <TabsTrigger value="access">Access Control</TabsTrigger>
-                            <TabsTrigger value="giveaccess">Give Access</TabsTrigger>
-                            <TabsTrigger value="revokeaccess">Revoke Access</TabsTrigger> */}
-                            <TabsTrigger value="nominee">Nominee Records</TabsTrigger>
+                            {/* <TabsTrigger value="nominee">Nominee Records</TabsTrigger>
                             <TabsTrigger value="addnominee">Add Nominee</TabsTrigger>
-                            <TabsTrigger value="nominees">Your Nominees</TabsTrigger>
+                            <TabsTrigger value="nominees">Your Nominees</TabsTrigger> */}
+                            {/* removing nominees feature */}
                         </TabsList>
                     </div>
                     <div className="flex items-center justify-center">

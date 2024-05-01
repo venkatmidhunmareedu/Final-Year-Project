@@ -255,6 +255,7 @@ contract Medivault {
         recordHashes.push(record_hash);
         return true;
     }
+    
 
     // function to fetch a record
     function getRecord(

@@ -46,7 +46,7 @@ const AllAdmins = () => {
                         return (
                             <Card key={index}>
                                 <CardHeader className="flex">
-                                    <CardTitle className="text-sm">Institution name : <b>{admin[index]}</b></CardTitle>
+                                    <CardTitle className="text-sm">Institution name : <b>{admin.institution_name}</b></CardTitle>
                                     <CardDescription className="text-xs">Account Address : {addresses[index]}</CardDescription>
                                 </CardHeader>
                             </Card>

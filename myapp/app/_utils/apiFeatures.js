@@ -423,7 +423,7 @@ export async function giveReadAccess(contract, address, record_hash, patient_add
         return null;
     }
     try {
-        const value = await contract.methods.addMemberToReadAccess(record_hash, patient_address).send({ from: address });
+        const value = await contract.methods.addMemberToReadAccess(record_hash, patient_address).send({ from: address , gas: 1000000  });
         return true;
     }
     catch (err) {
@@ -437,7 +437,7 @@ export async function giveWriteAccess(contract, address, record_hash, patient_ad
         return null;
     }
     try {
-        const value = await contract.methods.addMemberToWriteAccess(record_hash, patient_address).send({ from: address });
+        const value = await contract.methods.addMemberToWriteAccess(record_hash, patient_address).send({ from: address , gas: 1000000  });
         return true;
     }
     catch (err) {
@@ -452,7 +452,7 @@ export async function revokeReadAccess(contract, address, record_hash, mm_addres
         return null;
     }
     try {
-        const value = await contract.methods.revokeReadAccess(record_hash, mm_address).send({ from: address });
+        const value = await contract.methods.revokeReadAccess(record_hash, mm_address).send({ from: address , gas: 1000000 });
         return true;
     }
     catch (err) {
@@ -466,7 +466,7 @@ export async function revokeWriteAccess(contract, address, record_hash, mm_addre
         return null;
     }
     try {
-        const value = await contract.methods.revokeWriteAccess(record_hash, mm_address).send({ from: address });
+        const value = await contract.methods.revokeWriteAccess(record_hash, mm_address).send({ from: address ,gas: 1000000  });
         console.log("revoke write access from contract", value);
         return true;
     }

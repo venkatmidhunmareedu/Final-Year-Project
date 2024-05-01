@@ -55,6 +55,7 @@ export function GiveAccess(props) {
             }
             else {
                 check = giveReadAccess(state.contract, address, props.id,values.metamask_addr);
+                console.log('check',check);
                 if (check) {
                     toast({
                         title: "Info",
