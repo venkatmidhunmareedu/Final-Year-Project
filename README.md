@@ -9,11 +9,19 @@ Here are some screenshots of the project:
 ![Screenshot 1](screenshots/Screenshot%202024-04-15%20095822.png)
 
 ### Auth Page
-![Screenshot 1](https://github.com/venkatmidhunmareedu/Final-Year-Project/blob/main/screenshots/Screenshot%202024-04-15%20100004.png)
+![Screenshot 1](screenshots/Screenshot%202024-04-15%20100004.png)
 
 ### Dashboards 
-![Screenshot 1](https://github.com/venkatmidhunmareedu/Final-Year-Project/blob/main/screenshots/Screenshot%202024-04-15%20100016.png)
-![Screenshot 1](https://github.com/venkatmidhunmareedu/Final-Year-Project/blob/main/screenshots/Screenshot%202024-04-15%20100112.png)
+![Screenshot 1](screenshots/Screenshot%202024-04-15%20100016.png)
+![Screenshot 1](screenshots/Screenshot%202024-04-15%20100112.png)
+![Screenshot 1](screenshots/Screenshot%202024-04-15%20100216.png)
+
+## Record Viewer 
+![Screenshot 1](screenshots/Screenshot%202024-04-15%20100314.png)
+![Screenshot 1](screenshots/Screenshot%202024-04-15%20100322.png)
+![Screenshot 1](screenshots/Screenshot%202024-04-15%20100331.png)
+
+
 
 ### Dashboard
 
