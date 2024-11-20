@@ -2,6 +2,21 @@
 
 Welcome to our blockchain-powered wonderland! 🎉 This project is not just your ordinary application; it's a decentralized masterpiece! With Next.js for the frontend, we're bringing you a user experience like no other, while our smart contracts, powered by Truffle, ensure trust and security in every transaction. Buckle up as we embark on this journey to decentralization! 🚀
 
+## Screenshots
+
+Here are some screenshots of the project:
+### Home Page
+![Screenshot 1](screenshots/Screenshot%202024-04-15%20095822.png)
+
+### Auth Page
+![Screenshot 1](https://github.com/venkatmidhunmareedu/Final-Year-Project/blob/main/screenshots/Screenshot%202024-04-15%20100004.png)
+
+### Dashboards 
+![Screenshot 1](https://github.com/venkatmidhunmareedu/Final-Year-Project/blob/main/screenshots/Screenshot%202024-04-15%20100016.png)
+![Screenshot 1](https://github.com/venkatmidhunmareedu/Final-Year-Project/blob/main/screenshots/Screenshot%202024-04-15%20100112.png)
+
+### Dashboard
+
 ## Features 🛠️
 
 - **Next.js Frontend**: Say goodbye to boring interfaces! With Next.js, our frontend is as snazzy and reactive as it gets!
